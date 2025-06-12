@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -34,19 +34,41 @@ function Navbar() {
     },
   ];
 
+  const [visible, setVisible] = useState(false);
+
+  
+  function handleVisibility() {
+    setVisible(prev => !prev);
+  }
+
   return (
-    <>
-      <div className="w-screen shadow-sm h-24 flex justify-center items-center ">
+    <div className="relative w-full h-full">
+      {/* search-area */}
+
+      <div className="w-full">
+        <div className={"w-full bg-black/50 z-30 h-full absolute" + (visible? " visible" : " invisible")} onClick={handleVisibility}></div>
+         <div className={"bg-white w-[40%] z-50 h-full absolute duration-300 " + (visible? "left-0":" -left-[40%]")}>
+          <p className="bg-black text-white p-5 w-[10%]" onClick={handleVisibility}>cut</p>
+         </div>
+      </div>
+
+      {/* main-background */}
+      <div className="w-screen sticky z-20 top-0 bg-white shadow-md h-24 flex justify-center items-center ">
         <div className="flex w-[70%] justify-between">
           <div className="flex items-center gap-7">
-            <Link to="/"> 
-            <img
-              className="w-7"
-              src="https://w7.pngwing.com/pngs/55/100/png-transparent-swiggy-hd-logo-thumbnail.png"
-              alt=""
-            />
+            <Link to="/">
+              <img
+                className="w-7"
+                src="https://w7.pngwing.com/pngs/55/100/png-transparent-swiggy-hd-logo-thumbnail.png"
+                alt=""
+              />
             </Link>
-            <div className="flex items-center gap-2">
+            <div
+              className=" cursor-pointer flex items-center gap-2"
+              onClick={() => {
+                handleVisibility();
+              }}
+            >
               <p className=" font-bold border-b-2 text-gray-700">Other</p>
               <FontAwesomeIcon
                 className="text-orange-500 mt-1"
@@ -65,7 +87,7 @@ function Navbar() {
         </div>
       </div>
       <Outlet />
-    </>
+    </div>
   );
 }
 
