@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { Outlet, Link } from "react-router-dom";
+import { Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
 
 function Navbar() {
@@ -34,21 +35,29 @@ function Navbar() {
     },
   ];
 
-  const [visible, setVisible] = useState(false);
+  const {visible,setVisible} = useContext(Visibility)
 
   
   function handleVisibility() {
     setVisible(prev => !prev);
   }
-
+  // async function fetchApi(){
+  //   const res = await fetch("https://www.swiggy.com/dapi/misc/place-autocomplete?input=mumbai")
+  //   const json = await res.json()
+  //   console.log(json)
+  // }
+  // fetchApi()
   return (
     <div className="relative w-full h-full">
       {/* search-area */}
 
       <div className="w-full">
-        <div className={"w-full bg-black/50 z-30 h-full absolute" + (visible? " visible" : " invisible")} onClick={handleVisibility}></div>
+        <div className={"w-full bg-black/50 z-30 h-full absolute" + (visible? " visible " : " invisible")} onClick={handleVisibility}></div>
          <div className={"bg-white w-[40%] z-50 h-full absolute duration-300 " + (visible? "left-0":" -left-[40%]")}>
           <p className="bg-black text-white p-5 w-[10%]" onClick={handleVisibility}>cut</p>
+         
+          <input type="text" className="border p-5 focus:outline-none focus:shadow-lg"></input>,
+             
          </div>
       </div>
 
