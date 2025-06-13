@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import OnYourMind from "./OnYourMind";
 import TopRestaurants from "./TopRestaurants";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
+import { Coordinates } from "../Context/ContextApi";
 
 function Body() {
   const [topRestaurantsData, setTopRestaurantsData] = useState([]);
   const [onYourMindData, setOnYourMindData] = useState([]);
-
+  const {coord,setCoord} = useContext(Coordinates)
+  console.log(coord.lat,coord.lng)
   async function fetchData() {
     const response = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=10.0013655&lng=76.310081&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${coord.lat}&lng=${coord.lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`
     );
     
     // https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=10.0013655&lng=76.310081&restaurantId=763910&catalog_qa=undefined&submitAction=ENTER
@@ -23,7 +25,7 @@ function Body() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [coord.lat,coord.lng]);
 
   return (
     <div className="w-full overflow-y-visible">

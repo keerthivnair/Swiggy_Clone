@@ -4,7 +4,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { Outlet, Link } from "react-router-dom";
-import { Visibility } from "../Context/ContextApi";
+import { Coordinates, Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
 
 function Navbar() {
@@ -36,34 +36,57 @@ function Navbar() {
   ];
 
   const {visible,setVisible} = useContext(Visibility)
-
+  const [searchResult,setSearchResult] = useState([])
+  const {setCoord} = useContext(Coordinates)
+  const [address,setAddress]= useState('')
   
   function handleVisibility() {
     setVisible(prev => !prev);
   }
-  // async function fetchApi(){
-  //   const res = await fetch("https://www.swiggy.com/dapi/misc/place-autocomplete?input=mumbai")
-  //   const json = await res.json()
-  //   console.log(json)
-  // }
-  // fetchApi()
+  async function searchResultFtn(val){
+    if (val == '') return 
+    const res = await fetch(`https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`)
+    const json = await res.json()
+    // console.log(json.data)
+    setSearchResult(json.data)
+  }
+  async function fetchLanAndLon(id){
+    if (id == '') return 
+    const res = await fetch(`https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`)
+    const json = await res.json()
+    setCoord({'lat':json.data[0].geometry.location.lat,
+      'lng': json.data[0].geometry.location.lng}
+    )
+    setAddress(json.data[0].formatted_address)
+  }
+
+
+
+
+
   return (
     <div className="relative w-full h-full">
       {/* search-area */}
 
       <div className="w-full">
-        <div className={"w-full bg-black/50 z-30 h-full absolute" + (visible? " visible " : " invisible")} onClick={handleVisibility}></div>
-         <div className={"bg-white w-[40%] z-50 h-full absolute duration-300 " + (visible? "left-0":" -left-[40%]")}>
-          <p className="bg-black text-white p-5 w-[10%]" onClick={handleVisibility}>cut</p>
+        <div className={"w-full bg-black/50 z-30 h-full absolute " + (visible? " visible " : " invisible")} onClick={handleVisibility}></div>
+         <div className={ " p-5 bg-white w-[40%] z-50 h-full absolute duration-300 " + (visible? "left-0":" -left-[40%]")}>
+          <p className="bg-black cursor-pointer text-white p-5 w-[10%] flex justify-center items-center " onClick={handleVisibility}>cut</p>
          
-          <input type="text" className="border p-5 focus:outline-none focus:shadow-lg"></input>,
-             
+          <input type="text" className="border p-3 focus:outline-none focus:shadow-lg" onChange={(e)=>searchResultFtn(e.target.value)}></input>
+          <div>
+            <ul>
+              {searchResult.map((result) => (
+                <li onClick={()=>fetchLanAndLon(result.place_id)}>{result.structured_formatting.main_text} <p className="text-sm opacity-65"> {result.structured_formatting.secondary_text} </p></li>
+              ))}
+            </ul>
+            </div> 
          </div>
       </div>
 
       {/* main-background */}
       <div className="w-screen sticky z-20 top-0 bg-white shadow-md h-24 flex justify-center items-center ">
-        <div className="flex w-[70%] justify-between">
+        <div className="flex w-[75%] justify-between">
           <div className="flex items-center gap-7">
             <Link to="/">
               <img
@@ -73,12 +96,14 @@ function Navbar() {
               />
             </Link>
             <div
-              className=" cursor-pointer flex items-center gap-2"
+              className="cursor-pointer flex items-center gap-2"
               onClick={() => {
                 handleVisibility();
               }}
             >
-              <p className=" font-bold border-b-2 text-gray-700">Other</p>
+              <div className="text-sm flex gap-3">
+                <span className="font-bold border-b-2 ">Other</span> <span className=" text-gray-700 font-medium opacity-85">{address}</span>
+                </div>
               <FontAwesomeIcon
                 className="text-orange-500 mt-1"
                 icon="fa-solid fa-angle-down"

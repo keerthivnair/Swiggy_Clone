@@ -4,11 +4,13 @@ import { Routes, Route } from "react-router-dom";
 import RestaurantMenu from "./components/RestaurantMenu";
 
 import { useState } from "react";
-import { Visibility } from "./Context/ContextApi";
+import { Coordinates, Visibility } from "./Context/ContextApi";
 
 function App() {
   const [visible,setVisible] = useState(false)
+  const [coord,setCoord] = useState({lat:10.0013655,lng:76.310081})
   return (
+    <Coordinates.Provider value={{coord,setCoord}}>
     <Visibility.Provider value ={{visible,setVisible}}>
     <div className={visible? " overflow-hidden max-h-screen" : " "}>
       <Routes>
@@ -19,6 +21,7 @@ function App() {
       </Routes>
     </div>
     </Visibility.Provider>
+    </Coordinates.Provider>
   );
 }
 

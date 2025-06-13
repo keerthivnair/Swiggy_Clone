@@ -9,6 +9,7 @@ import React, {
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { Coordinates } from "../Context/ContextApi";
 const itemContext = createContext();
 
 let nonveg =
@@ -16,15 +17,19 @@ let nonveg =
 let veg =
   " https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 
+
+
 function RestaurantMenu() {
   const { id } = useParams();
+  const {coord,setCoord} = useContext(Coordinates)
   let mainId = id.split("-").at(-1).split("rest")[1];
   // console.log(id.split("-").at(-1).split("rest")[1]);
   const fetchData = async () => {
     const data = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=10.0112&lng=76.305&restaurantId=${mainId}&submitAction=ENTER`
+      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
     );
     const json = await data.json();
+    // console.log(json)
 
     setResInfo(json?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
@@ -330,6 +335,7 @@ function DetailMenu() {
             useEffect(() => {
               if (textRef.current) {
                 const { offsetHeight, scrollHeight } = textRef.current;
+                // console.log('o',offsetHeight, scrollHeight)
                 setIsTruncate(offsetHeight < scrollHeight);
               }
             }, []);
@@ -379,14 +385,13 @@ function DetailMenu() {
                       ""
                     )}
                     {description ? (
-                      <span
+                      <p
                         ref={textRef}
-                        className={`line-clamp-${
-                          isExpanded ? "none" : 2
-                        } text-gray-500 font-semibold text-md`}
+                        className={`${
+                          isExpanded ? " " :`line-clamp-2`} text-gray-500 font-semibold text-md `}
                       >
                         {description}
-                      </span>
+                      </p>
                     ) : (
                       ""
                     )}
@@ -396,9 +401,9 @@ function DetailMenu() {
                         onClick={handleClick}
                       >
                         {isExpanded ? (
-                          <p className="font-bold ml-[5px]">less</p>
+                          <span className="font-bold ml-[5px]">less</span>
                         ) : (
-                          "more"
+                          <span className="font-bold ml-[5px] ">more</span>
                         )}
                       </button>
                     )}
