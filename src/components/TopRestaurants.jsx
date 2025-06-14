@@ -6,7 +6,7 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
 import RestaurantCard from "./RestaurantCard";
 library.add(fas, fab);
 
-function TopRestaurants({data}) {
+function TopRestaurants({data = [], title}) {
   const [value, setValue] = useState(0);
   function handleNext() {
     value >= 155 ? "" : setValue((prev) => prev + 50);
@@ -19,7 +19,7 @@ function TopRestaurants({data}) {
   return (
     <div className="mt-12">
       <div className="flex justify-between mt-5">
-        <h1 className="text-2xl font-bold">Top Restaurants chains in Kochi</h1>
+        <h1 className="text-2xl font-bold">{title}</h1>
         <div className="flex gap-3">
           <div
             className={`bg-gray-200 py-3 px-3 cursor-pointer rounded-full flex items-center justify-center ${

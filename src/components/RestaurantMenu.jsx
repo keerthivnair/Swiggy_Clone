@@ -9,7 +9,7 @@ import React, {
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { Coordinates } from "../Context/ContextApi";
+import { CardContext, Coordinates } from "../Context/ContextApi";
 const itemContext = createContext();
 
 let nonveg =
@@ -17,11 +17,9 @@ let nonveg =
 let veg =
   " https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 
-
-
 function RestaurantMenu() {
   const { id } = useParams();
-  const {coord,setCoord} = useContext(Coordinates)
+  const { coord, setCoord } = useContext(Coordinates);
   let mainId = id.split("-").at(-1).split("rest")[1];
   // console.log(id.split("-").at(-1).split("rest")[1]);
   const fetchData = async () => {
@@ -41,9 +39,11 @@ function RestaurantMenu() {
         (data) => data?.card?.card.itemCards || data?.card?.card?.categories
       );
     // console.log(actualMenu);
-    console.log(json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+    console.log(
+      json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
         (data) => data.card.card.title == "Top Picks"
-      )[0])
+      )[0]
+    );
     setTopPicks(
       json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
         (data) => data.card.card.title == "Top Picks"
@@ -176,11 +176,12 @@ function RestaurantMenu() {
             />
           </div>
           {/* topPicks */}
-          { 
-            topPicks &&
+          {topPicks && (
             <div className="w-full">
               <div className="flex justify-between mt-5 pt-4 pb-5 items-center">
-                <h1 className="text-xl font-bold">{topPicks.card.card.title}</h1>
+                <h1 className="text-xl font-bold">
+                  {topPicks.card.card.title}
+                </h1>
                 <div className="flex gap-3">
                   <div
                     className={`bg-gray-200 py-3 px-3 cursor-pointer rounded-full flex items-center justify-center ${
@@ -211,19 +212,35 @@ function RestaurantMenu() {
                 </div>
               </div>
               <div className="flex gap-4 overflow-hidden">
-                {topPicks.card.card.carousel.map(({creativeId, dish:{info:{defaultPrice,price}}}) => (
-                  // <Discount data={data} />
-                  <div className="min-w-[384px] h-[395px] relative">
-                    <img className="w-full h-full " src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${creativeId}`} alt="" srcSet="" />
-                    <div className="absolute bottom-3 p-5 w-full flex justify-between items-center">
-                      <p className="text-xl font-semibold text-white">₹ {defaultPrice/100 || price/100}</p>
-                      <button className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">ADD</button>
+                {topPicks.card.card.carousel.map(
+                  ({
+                    creativeId,
+                    dish: {
+                      info: { defaultPrice, price },
+                    },
+                  }) => (
+                    // <Discount data={data} />
+                    <div className="min-w-[384px] h-[395px] relative">
+                      <img
+                        className="w-full h-full "
+                        src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${creativeId}`}
+                        alt=""
+                        srcSet=""
+                      />
+                      <div className="absolute bottom-3 p-5 w-full flex justify-between items-center">
+                        <p className="text-xl font-semibold text-white">
+                          ₹ {defaultPrice / 100 || price / 100}
+                        </p>
+                        <button className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">
+                          ADD
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
-          }
+          )}
 
           <div className="w-full">
             {menuData.map(
@@ -310,135 +327,138 @@ function DetailMenu() {
     return (
       <div className="my-7">
         {/* {console.log(itemCards.card.info)} */}
-        {itemCards.map(
-          (
-            {
-              card: {
-                info: {
-                  name,
-                  defaultPrice,
-                  price,
-                  itemAttribute: { vegClassifier },
-                  ratings: {
-                    aggregatedRating: { rating, ratingCountV2 },
-                  },
-                  description,
-                  imageId,
-                },
-              },
+        {itemCards.map(({ card: { info } }, id) => {
+          const {
+            name,
+            defaultPrice,
+            price,
+            itemAttribute: { vegClassifier },
+            ratings: {
+              aggregatedRating: { rating, ratingCountV2 },
             },
-            id
-          ) => {
-            const [isTruncate, setIsTruncate] = useState(false);
-            const [isExpanded, setIsExpanded] = useState(false);
-            let textRef = useRef("");
-            useEffect(() => {
-              if (textRef.current) {
-                const { offsetHeight, scrollHeight } = textRef.current;
-                // console.log('o',offsetHeight, scrollHeight)
-                setIsTruncate(offsetHeight < scrollHeight);
-              }
-            }, []);
-            const handleClick = () => {
-              setIsExpanded(!isExpanded);
-            };
+            description,
+            imageId,
+          } = info;
+          
+          const {cardData,setCardData} = useContext(CardContext)
+          function handleAddToCart() {
+            setCardData((prev) => [...prev,info])
+          }
 
-            return (
-              <>
-                <div className="flex justify-between w-full min-h-[182px]">
-                  <div className="w-[70%] flex flex-col justify-between items-start">
-                    <div>
-                      {" "}
-                      {vegClassifier == "VEG" ? (
-                        <img className="h-[17px]" src={veg}></img>
-                      ) : (
-                        <img className="h-[32px]" src={nonveg} alt="" />
-                      )}
-                      <h2 className="font-bold text-lg text-gray-700">
-                        {name}
-                      </h2>
-                      <p className="font-semibold text-md">
-                        {"₹ " +
-                          (defaultPrice
-                            ? Math.floor(defaultPrice / 100)
-                            : Math.floor(price / 100))}
-                      </p>
-                    </div>
+          const [isTruncate, setIsTruncate] = useState(false);
+          const [isExpanded, setIsExpanded] = useState(false);
+          let textRef = useRef("");
+          useEffect(() => {
+            if (textRef.current) {
+              const { offsetHeight, scrollHeight } = textRef.current;
+              // console.log('o',offsetHeight, scrollHeight)
+              setIsTruncate(offsetHeight < scrollHeight);
+            }
+          }, []);
+          const handleClick = () => {
+            setIsExpanded(!isExpanded);
+          };
 
-                    {rating ? (
-                      <div className="flex gap-1">
-                        <p>
-                          <FontAwesomeIcon
-                            icon="fa-solid fa-star"
-                            style={{ color: "#36ec6d" }}
-                            className="text-sm"
-                          />
-                        </p>
-                        <span>
-                          <span>{rating} </span>
-                          <span className="font-bold text-gray-500">
-                            ({ratingCountV2})
-                          </span>
-                        </span>
-                      </div>
+          return (
+            <>
+              <div className="flex justify-between w-full min-h-[182px]">
+                <div className="w-[70%] flex flex-col justify-between items-start">
+                  <div>
+                    {" "}
+                    {vegClassifier == "VEG" ? (
+                      <img className="h-[17px]" src={veg}></img>
                     ) : (
-                      ""
+                      <img className="h-[32px]" src={nonveg} alt="" />
                     )}
-                    {description ? (
-                      <p
-                        ref={textRef}
-                        className={`${
-                          isExpanded ? " " :`line-clamp-2`} text-gray-500 font-semibold text-md `}
-                      >
-                        {description}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                    {isTruncate && (
-                      <button
-                        className="font-bold cursor-pointer"
-                        onClick={handleClick}
-                      >
-                        {isExpanded ? (
-                          <span className="font-bold ml-[5px]">less</span>
-                        ) : (
-                          <span className="font-bold ml-[5px] ">more</span>
-                        )}
-                      </button>
-                    )}
+                    <h2 className="font-bold text-lg text-gray-700">{name}</h2>
+                    <p className="font-semibold text-md">
+                      {"₹ " +
+                        (defaultPrice
+                          ? Math.floor(defaultPrice / 100)
+                          : Math.floor(price / 100))}
+                    </p>
                   </div>
-                  <div className="cursor-pointer w-[20%] relative h-full">
-                    {imageId ? (
-                      <>
-                        <img
-                          src={
-                            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" +
-                            imageId
-                          }
-                          alt=""
-                          className="aspect-square rounded-xl"
+
+                  {rating ? (
+                    <div className="flex gap-1">
+                      <p>
+                        <FontAwesomeIcon
+                          icon="fa-solid fa-star"
+                          style={{ color: "#36ec6d" }}
+                          className="text-sm"
                         />
-                        <button className="bg-white absolute bottom-[-23px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg">
-                          ADD
-                        </button>
-                      </>
-                    ) : (
-                      <button className="bg-white absolute bottom-[-120px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg">
+                      </p>
+                      <span>
+                        <span>{rating} </span>
+                        <span className="font-bold text-gray-500">
+                          ({ratingCountV2})
+                        </span>
+                      </span>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {description ? (
+                    <p
+                      ref={textRef}
+                      className={`${
+                        isExpanded ? " " : `line-clamp-2`
+                      } text-gray-500 font-semibold text-md `}
+                    >
+                      {description}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                  {isTruncate && (
+                    <button
+                      className="font-bold cursor-pointer"
+                      onClick={handleClick}
+                    >
+                      {isExpanded ? (
+                        <span className="font-bold ml-[5px]">less</span>
+                      ) : (
+                        <span className="font-bold ml-[5px] ">more</span>
+                      )}
+                    </button>
+                  )}
+                </div>
+                <div className="cursor-pointer w-[20%] relative h-full">
+                  {imageId ? (
+                    <>
+                      <img
+                        src={
+                          "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" +
+                          imageId
+                        }
+                        alt=""
+                        className="aspect-square rounded-xl"
+                      />
+                      <button
+                        onClick={handleAddToCart}
+                        className="bg-white absolute bottom-[-23px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
+                      >
                         ADD
                       </button>
-                    )}
-                  </div>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleAddToCart}
+                      className="bg-white absolute bottom-[-120px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
+                    >
+                      ADD
+                    </button>
+                  )}
                 </div>
-                {id == itemCards.length - 1 ? (
-                  ""
-                ) : (
-                  <hr className="my-5 border-gray-300" />
-                )}
-              </>
-            );
-          }
-        )}
+              </div>
+              {id == itemCards.length - 1 ? (
+                ""
+              ) : (
+                <hr className="my-5 border-gray-300" />
+              )}
+            </>
+          );
+        })}
       </div>
     );
   } else {
@@ -462,6 +482,8 @@ function DetailMenu() {
     );
   }
 }
+
+function DetailMenuCard({ info, resInfo }) {}
 
 function Discount({
   data: {
