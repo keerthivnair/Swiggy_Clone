@@ -4,7 +4,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { Outlet, Link } from "react-router-dom";
-import { CardContext, Coordinates, Visibility } from "../Context/ContextApi";
+import { CartContext, Coordinates, Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
 
 function Navbar() {
@@ -40,7 +40,7 @@ function Navbar() {
     path:'/cart'
     },
   ];
-  const { cardData, setCardData } = useContext(CardContext);
+  const { cartData, setCartData } = useContext(CartContext);
   const { visible, setVisible } = useContext(Visibility);
   const [searchResult, setSearchResult] = useState([]);
   const { setCoord } = useContext(Coordinates);
@@ -172,8 +172,8 @@ function Navbar() {
                   <p className="text-md font-medium text-gray-700">
                     {item.name}
                   </p>
-                  {item.name === "Cart" && cardData.length > 0 && (
-                    <p>{cardData.length}</p>
+                  {item.name === "Cart" && cartData.length > 0 && (
+                    <p>{cartData.length}</p>
                   )}
                 </div>
               </Link>

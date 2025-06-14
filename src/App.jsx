@@ -4,15 +4,15 @@ import { Routes, Route } from "react-router-dom";
 import RestaurantMenu from "./components/RestaurantMenu";
 
 import { useState } from "react";
-import { CardContext, Coordinates, Visibility } from "./Context/ContextApi";
+import { CartContext, Coordinates, Visibility } from "./Context/ContextApi";
 import Cart from "./components/Cart";
 
 function App() {
   const [visible,setVisible] = useState(false)
   const [coord,setCoord] = useState({lat:10.0013655,lng:76.310081})
-  const [cardData,setCardData] = useState([])
+  const [cartData,setCartData] = useState([])
   return (
-    <CardContext.Provider value={{cardData,setCardData}}>
+    <CartContext.Provider value={{cartData,setCartData}}>
     <Coordinates.Provider value={{coord,setCoord}}>
     <Visibility.Provider value ={{visible,setVisible}}>
     <div className={visible? " overflow-hidden max-h-screen" : " "}>
@@ -27,7 +27,7 @@ function App() {
     </div>
     </Visibility.Provider>
     </Coordinates.Provider>
-    </CardContext.Provider>
+    </CartContext.Provider>
   );
 }
 

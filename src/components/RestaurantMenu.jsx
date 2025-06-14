@@ -9,7 +9,7 @@ import React, {
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { CardContext, Coordinates } from "../Context/ContextApi";
+import { CartContext, Coordinates } from "../Context/ContextApi";
 const itemContext = createContext();
 
 let nonveg =
@@ -231,7 +231,7 @@ function RestaurantMenu() {
                         <p className="text-xl font-semibold text-white">
                           ₹ {defaultPrice / 100 || price / 100}
                         </p>
-                        <button className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">
+                        <button  className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">
                           ADD
                         </button>
                       </div>
@@ -339,10 +339,16 @@ function DetailMenu() {
             description,
             imageId,
           } = info;
-          
-          const {cardData,setCardData} = useContext(CardContext)
+
+          const { cartData, setCartData } = useContext(CartContext);
           function handleAddToCart() {
-            setCardData((prev) => [...prev,info])
+            const isAdded = cartData.find((data) => data.id === info.id);
+            if (!isAdded) {
+              setCartData((prev) => [...prev, info]);
+            }
+            else {
+              alert('Item already added to cart')
+            }
           }
 
           const [isTruncate, setIsTruncate] = useState(false);
