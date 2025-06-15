@@ -10,6 +10,7 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { CartContext, Coordinates } from "../Context/ContextApi";
+
 const itemContext = createContext();
 
 let nonveg =
@@ -231,7 +232,7 @@ function RestaurantMenu() {
                         <p className="text-xl font-semibold text-white">
                           ₹ {defaultPrice / 100 || price / 100}
                         </p>
-                        <button  className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">
+                        <button className="bg-white text-green-600 rounded-xl py-2 px-12 font-bold text-xl">
                           ADD
                         </button>
                       </div>
@@ -254,7 +255,7 @@ function RestaurantMenu() {
                 i
               ) => (
                 <itemContext.Provider value={{ title, itemCards, card }}>
-                  <MenuCard />
+                  <MenuCard resInfo={resInfo} />
                 </itemContext.Provider>
               )
             )}
@@ -266,7 +267,7 @@ function RestaurantMenu() {
   );
 }
 
-function MenuCard({ title_card }) {
+function MenuCard({ title_card, resInfo }) {
   function toggleDropDown() {
     setIsOpen((prev) => !prev);
   }
@@ -302,7 +303,7 @@ function MenuCard({ title_card }) {
               />
             )}
           </div>
-          {isOpen && <DetailMenu />}
+          {isOpen && <DetailMenu resInfo={resInfo} />}
         </div>
 
         {title ? <hr className="border-gray-100 border-8 my-5" /> : ""}
@@ -313,14 +314,14 @@ function MenuCard({ title_card }) {
       <div>
         <h1 className="font-extrabold text-xl">{card.title}</h1>
 
-        <DetailMenu />
+        <DetailMenu resInfo={resInfo} />
         <hr className="border-gray-100 border-8 my-5" />
       </div>
     );
   }
 }
 
-function DetailMenu() {
+function DetailMenu({ resInfo }) {
   const { itemCards, card } = useContext(itemContext);
 
   if (itemCards) {
@@ -341,13 +342,34 @@ function DetailMenu() {
           } = info;
 
           const { cartData, setCartData } = useContext(CartContext);
+
           function handleAddToCart() {
+            // console.log(resInfo)
+
             const isAdded = cartData.find((data) => data.id === info.id);
+            let getResInfoFromLocalStorage =
+              JSON.parse(localStorage.getItem("resInfo")) || [];
             if (!isAdded) {
-              setCartData((prev) => [...prev, info]);
-            }
-            else {
-              alert('Item already added to cart')
+              if (
+                getResInfoFromLocalStorage.name == resInfo.name ||
+                getResInfoFromLocalStorage.length == 0
+              ) {
+                setCartData((prev) => [...prev, info]);
+
+                localStorage.setItem(
+                  "cartData",
+                  JSON.stringify([...cartData, info])
+                );
+                localStorage.setItem(
+                  "resInfo",
+                  JSON.stringify(resInfo)
+                );
+                // console.log(resInfo)
+              } else {
+                alert("Your cart contains items from other restaurant.");
+              }
+            } else {
+              alert("Item already added to cart");
             }
           }
 
@@ -488,8 +510,6 @@ function DetailMenu() {
     );
   }
 }
-
-function DetailMenuCard({ info, resInfo }) {}
 
 function Discount({
   data: {
