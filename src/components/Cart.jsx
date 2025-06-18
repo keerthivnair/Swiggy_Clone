@@ -1,14 +1,19 @@
 import React, { useContext } from "react";
 import { CartContext } from "../Context/ContextApi";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteItem, clearrCart } from "../utils/cartSlice";
+import toast from "react-hot-toast";
 
 function Cart() {
   let totalPrice = 0;
-  const { cartData, setCartData } = useContext(CartContext);
-  
- for (let i =0;i<cartData.length ; i++){
-    totalPrice+=cartData[i].price /100 || cartData[i].defaultPrice /100
- }
+  // const {  setCartData } = useContext(CartContext);
+
+  const cartData = useSelector((state) => state.cartSlice.cartItems);
+
+  for (let i = 0; i < cartData.length; i++) {
+    totalPrice += cartData[i].price / 100 || cartData[i].defaultPrice / 100;
+  }
 
   if (cartData.length <= 0) {
     return (
@@ -35,20 +40,25 @@ function Cart() {
       </div>
     );
   }
+  const dispatch = useDispatch();
 
   function handleRemoveFromCart(i) {
     let newArr = [...cartData];
     newArr.splice(i, 1);
-    if(newArr.length<=0){
-        localStorage.clear()
+    if (newArr.length <= 0) {
+      dispatch(clearrCart());
     }
-    localStorage.setItem("cartData", JSON.stringify(newArr));
-    setCartData(newArr);
+    dispatch(deleteItem(newArr));
+    toast.success("Item removed from cart");
+    // setCartData(newArr);
   }
 
-  function clearCart(){
-    setCartData([])
-    localStorage.clear()
+  function clearCart() {
+    dispatch(clearrCart());
+    toast.success("Empty Cart !");
+  }
+  function handlePlaceOrder(){
+    toast.success('Order Placed')
   }
 
   return (
@@ -57,10 +67,12 @@ function Cart() {
         {cartData.map((data, i) => (
           <div className="flex w-full justify-between my-5 p-2">
             <div className="w-[70%]">
-              <h2 className=" text-2xl">{data.name}</h2>   
-              <p className="mt-2">₹ {data.price /100 || data.defaultPrice /100}</p>
+              <h2 className=" text-2xl">{data.name}</h2>
+              <p className="mt-2">
+                ₹ {data.price / 100 || data.defaultPrice / 100}
+              </p>
             </div>
-           
+
             <div className="cursor-pointer w-[20%] relative h-full">
               {data.imageId ? (
                 <>
@@ -94,7 +106,20 @@ function Cart() {
         ))}
 
         <h1>Total - ₹{totalPrice}</h1>
-        <button className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer" onClick={clearCart}>Clear Cart</button>
+        <div className="flex flex-row-reverse justify-between">
+          <button
+            className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer"
+            onClick={clearCart}
+          >
+            Clear Cart
+          </button>
+          <button
+            className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer"
+            onClick={handlePlaceOrder}
+          >
+            Place order
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import OnYourMind from "./OnYourMind";
 import TopRestaurants from "./TopRestaurants";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
 import { Coordinates } from "../Context/ContextApi";
+import { useSelector } from "react-redux";
+
 
 function Body() {
   const [topRestaurantsData, setTopRestaurantsData] = useState([]);
@@ -33,6 +35,22 @@ function Body() {
     fetchData();
   }, [coord.lat,coord.lng]);
 
+
+  const filterVal = useSelector((state) => state.filterSlice.filterVal)
+
+  const filteredData = topRestaurantsData?.filter(item=>{
+        if (!filterVal) return true;
+
+        switch (filterVal) {
+          case "Ratings 4.0+": return item?.info.avgRating > 4
+          case "Offers": return item?.info?.aggregatedDiscountInfoV3?.subHeader != null
+          case "Rs 300-Rs. 600": return item?.info?.costForTwo?.split(' ')[0].slice(1)>= '300' && item?.info?.costForTwo?.split(' ')[0].slice(1) <='600'
+          case "Less than Rs. 300": return item?.info?.costForTwo?.split(' ')[0].slice(1) <'300'
+          default : return true;
+        }
+
+  })
+
   if (data && data.communication) {
     return <div className="flex flex-col mt-48 overflow-hiddenflex-col justify-center items-center gap-5">
       <img className="w-72" src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_476,h_476/portal/m/location_unserviceable.png" alt="" />
@@ -46,7 +64,7 @@ function Body() {
       <div className="w-[82%] flex mx-auto mt-3 border-b border-gray-200  overflow-hidden  flex-col">
         <OnYourMind data={onYourMindData}  />
         <TopRestaurants data={topRestaurantsData}  title={topResTitle}/>
-        <OnlineFoodDelivery data={topRestaurantsData} title={onlineTitle}/> 
+        <OnlineFoodDelivery data={filterVal ?filteredData: topRestaurantsData} title={onlineTitle}/> 
       </div>
     </div>
   );

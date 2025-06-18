@@ -10,6 +10,9 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { CartContext, Coordinates } from "../Context/ContextApi";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, clearrCart } from "../utils/cartSlice";
+import toast from "react-hot-toast";
 
 const itemContext = createContext();
 
@@ -326,7 +329,7 @@ function DetailMenu({ resInfo }) {
 
   if (itemCards) {
     return (
-      <div className="my-7">
+      <div className="my-7 relative w-full">
         {/* {console.log(itemCards.card.info)} */}
         {itemCards.map(({ card: { info } }, id) => {
           const {
@@ -341,38 +344,38 @@ function DetailMenu({ resInfo }) {
             imageId,
           } = info;
 
-          const { cartData, setCartData } = useContext(CartContext);
-
+          // const { cartData, setCartData } = useContext(CartContext);
+          const cartData = useSelector((state) => state.cartSlice.cartItems);
+          const getResInfoFromLocalStorage = useSelector(
+            (state) => state.cartSlice.resInfo
+          );
+          // console.log(getResInfoFromLocalStorage)
+          const dispatch = useDispatch();
+          const [isDiffRes, setIsDiffRes] = useState(false);
           function handleAddToCart() {
             // console.log(resInfo)
 
             const isAdded = cartData.find((data) => data.id === info.id);
-            let getResInfoFromLocalStorage =
-              JSON.parse(localStorage.getItem("resInfo")) || [];
+
+            // let getResInfoFromLocalStorage =
+            //   JSON.parse(localStorage.getItem("resInfo")) || [];
             if (!isAdded) {
               if (
                 getResInfoFromLocalStorage.name == resInfo.name ||
                 getResInfoFromLocalStorage.length == 0
               ) {
-                setCartData((prev) => [...prev, info]);
+                dispatch(addToCart({ info, resInfo }));
+                toast.success("Item added successfully to Cart");
 
-                localStorage.setItem(
-                  "cartData",
-                  JSON.stringify([...cartData, info])
-                );
-                localStorage.setItem(
-                  "resInfo",
-                  JSON.stringify(resInfo)
-                );
                 // console.log(resInfo)
               } else {
-                alert("Your cart contains items from other restaurant.");
+                toast.error("Your cart contains items from other restaurant.");
+                setIsDiffRes(!isDiffRes);
               }
             } else {
-              alert("Item already added to cart");
+              toast.error("Item already added to cart ");
             }
           }
-
           const [isTruncate, setIsTruncate] = useState(false);
           const [isExpanded, setIsExpanded] = useState(false);
           let textRef = useRef("");
@@ -386,6 +389,17 @@ function DetailMenu({ resInfo }) {
           const handleClick = () => {
             setIsExpanded(!isExpanded);
           };
+          function handleIsDiffRes() {
+            setIsDiffRes(false);
+          }
+
+          
+
+          function clearCart() {
+            dispatch(clearrCart());
+            toast.success("Empty Cart !");
+            setIsDiffRes(false)
+          }
 
           return (
             <>
@@ -483,6 +497,32 @@ function DetailMenu({ resInfo }) {
                 ""
               ) : (
                 <hr className="my-5 border-gray-300" />
+              )}
+              {isDiffRes && (
+                <div className="p-8 z-40 w-[520px] gap-5 h-[215px] shadow-2xl  fixed bottom-7 left-[33%] bg-white flex flex-col justify-around ">
+                  <h1 className="text-start font-bold text-lg">
+                    Items already in cart
+                  </h1>
+                  <p className="text-start text-gray-500 font-medium">
+                    Your cart contains items from other restaurant. Would you
+                    like to reset your cart for adding items from this
+                    restaurant?
+                  </p>
+                  <div className=" flex gap-3.5 items-center justify-start w-full uppercase">
+                    <button
+                      className="cursor-pointer w-1/2 py-2 border-green-700 text-green-700 font-bold border"
+                      onClick={handleIsDiffRes}
+                    >
+                      N0
+                    </button>
+                    <button
+                      className="cursor-pointer w-1/2 py-2 bg-green-700 border-green-700 text-white font-bold border"
+                      onClick={clearCart}
+                    >
+                      YES, START AFRESH
+                    </button>
+                  </div>
+                </div>
               )}
             </>
           );

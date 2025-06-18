@@ -6,48 +6,53 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
 import { Outlet, Link } from "react-router-dom";
 import { CartContext, Coordinates, Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSearchBar } from "../utils/toggleSlice";
 
 function Navbar() {
   const navItems = [
     {
       name: "Swiggy Corporate",
       image: <FontAwesomeIcon icon="fa-solid fa-bag-shopping" />,
-      path:'/corporate'
+      path: "/corporate",
     },
     {
       name: "Search  ",
       image: <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />,
-      path:'/search'
+      path: "/search",
     },
     {
       name: "Offers",
       image: <FontAwesomeIcon icon="fa-solid fa-percent" />,
-      path:'/offers'
+      path: "/offers",
     },
     {
       name: "Help",
       image: <FontAwesomeIcon icon="fa-solid fa-suitcase-medical" />,
-    path:'/help'
+      path: "/help",
     },
     {
       name: "Sign In",
       image: <FontAwesomeIcon icon="fa-solid fa-person" />,
-    path:'/signIn'
+      path: "/signIn",
     },
     {
       name: "Cart",
       image: <FontAwesomeIcon icon="fa-solid fa-cart-plus" />,
-    path:'/cart'
+      path: "/cart",
     },
   ];
-  const { cartData, setCartData } = useContext(CartContext);
-  const { visible, setVisible } = useContext(Visibility);
+
+  const cartData = useSelector((state) => state.cartSlice.cartItems);
+  const visible = useSelector((state) => state.toggleSlice.searchBarToggle);
+  const dispatch = useDispatch();
+
   const [searchResult, setSearchResult] = useState([]);
   const { setCoord } = useContext(Coordinates);
   const [address, setAddress] = useState("");
 
   function handleVisibility() {
-    setVisible((prev) => !prev);
+    dispatch(toggleSearchBar());
   }
   async function searchResultFtn(val) {
     if (val == "") return;
@@ -71,6 +76,8 @@ function Navbar() {
     setAddress(json.data[0].formatted_address);
     handleVisibility();
   }
+
+  const userData = useSelector((state)=>state.authSlice.userData)
 
   return (
     <div className="relative w-full h-full">
@@ -165,19 +172,33 @@ function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-14">
-            {navItems.map((item) => (
-              <Link to={item.path}>
-                <div className="flex items-center gap-3">
-                  <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
-                  <p className="text-md font-medium text-gray-700">
-                    {item.name}
-                  </p>
-                  {item.name === "Cart" && cartData.length > 0 && (
-                    <p>{cartData.length}</p>
-                  )}
-                </div>
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.name == "Sign In" ? (
+                <Link to={item.path}>
+                  <div className="flex items-center gap-3">
+                    <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
+                    <p className="text-md font-medium text-gray-700">
+                      {item.name}
+                    </p>
+                    {item.name === "Cart" && cartData.length > 0 && (
+                      <p>{cartData.length}</p>
+                    )}
+                  </div>
+                </Link>
+              ) : (
+                <Link to={item.path}>
+                  <div className="flex items-center gap-3">
+                    <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
+                    <p className="text-md font-medium text-gray-700">
+                      {item.name}
+                    </p>
+                    {item.name === "Cart" && cartData.length > 0 && (
+                      <p>{cartData.length}</p>
+                    )}
+                  </div>
+                </Link>
+              )
+            )}
           </div>
         </div>
       </div>

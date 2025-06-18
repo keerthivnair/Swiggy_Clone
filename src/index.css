@@ -2,3 +2,21 @@
 .body{
     box-sizing: border-box;
 }
+.filterBtn{
+    border: 1px solid gray;
+    border-color: rgba(128, 128, 128, 0.243);
+    padding: 5px 10px;
+    border-radius : 40px;
+    font-weight: 600;
+    font-size:medium;
+    color: rgb(60, 58, 58);
+    cursor: pointer;
+    box-shadow: 1px 1px rgba(128, 128, 128, 0.339);
+}
+.active{
+   background-color: rgba(155, 152, 152, 0.269);
+   border: 1px solid; 
+}
+.active i{
+    display: block;
+}
