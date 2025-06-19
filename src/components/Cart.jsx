@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { CartContext } from "../Context/ContextApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteItem, clearrCart } from "../utils/cartSlice";
 import toast from "react-hot-toast";
@@ -52,14 +52,26 @@ function Cart() {
     toast.success("Item removed from cart");
     // setCartData(newArr);
   }
+  const navigate = useNavigate()
 
   function clearCart() {
     dispatch(clearrCart());
     toast.success("Empty Cart !");
   }
   function handlePlaceOrder(){
-    toast.success('Order Placed')
+    {
+      userData ? toast.success('Order Placed'): 
+      toast.error("Cannot place order. Please login first.")
+      
+      setInterval(()=>{
+        navigate("/signIn")
+      },2000)
+      
+    }
+    
   }
+
+  const userData = useSelector((state)=>state.authSlice.userData)
 
   return (
     <div className="w-full">
@@ -113,6 +125,7 @@ function Cart() {
           >
             Clear Cart
           </button>
+    
           <button
             className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer"
             onClick={handlePlaceOrder}

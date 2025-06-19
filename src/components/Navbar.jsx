@@ -7,7 +7,7 @@ import { Outlet, Link } from "react-router-dom";
 import { CartContext, Coordinates, Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSearchBar } from "../utils/toggleSlice";
+import { toggleLoginBar, toggleSearchBar } from "../utils/toggleSlice";
 
 function Navbar() {
   const navItems = [
@@ -45,6 +45,7 @@ function Navbar() {
 
   const cartData = useSelector((state) => state.cartSlice.cartItems);
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle);
+  const login = useSelector((state) => state.toggleSlice.searchLoginToggle);
   const dispatch = useDispatch();
 
   const [searchResult, setSearchResult] = useState([]);
@@ -53,6 +54,9 @@ function Navbar() {
 
   function handleVisibility() {
     dispatch(toggleSearchBar());
+  }
+  function handleLogin() {
+    dispatch(toggleLoginBar());
   }
   async function searchResultFtn(val) {
     if (val == "") return;
@@ -77,10 +81,11 @@ function Navbar() {
     handleVisibility();
   }
 
-  const userData = useSelector((state)=>state.authSlice.userData)
+  const userData = useSelector((state) => state.authSlice.userData);
+  console.log(userData);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full min-h-screen overflow-x-hidden">
       {/* search-area */}
 
       <div className="w-full">
@@ -141,6 +146,51 @@ function Navbar() {
           </div>
         </div>
       </div>
+      {/* login-area */}
+      <div className="w-full">
+        <div
+          className={
+            "w-full bg-black/50 z-30 h-full absolute " +
+            (login ? " visible " : " invisible")
+          }
+          onClick={handleLogin}
+        ></div>
+        <div
+          className={
+            "flex overflow-y-scroll justify-end p-5 bg-white w-[40%] z-50 h-full absolute duration-300 " +
+            (login ? " right-0" : " -right-[40%]")
+          }
+        >
+          <div className="flex flex-col w-[70%] mr-14 gap-4 mt-3 ">
+            <div className="w-full flex justify-between">
+              <div
+                className=" flex  items-center w-[40px] h-[40px] cursor-pointer"
+                onClick={handleLogin}
+              >
+                <FontAwesomeIcon icon="fa-solid fa-xmark" />
+              </div>
+              <img className="w-[75px] h-[90px]" src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" />
+            </div>
+
+            <h1 className="font-bold text-3xl">Login</h1>
+
+            <div>
+              <button className="bg-orange-600 text-white font-bold w-full text-center py-3">
+                Login
+              </button>
+              <p className="text-small">
+                By clicking on Login, I accept the Terms & Conditions & Privacy
+                Policy
+              </p>
+            </div>
+            <div>
+              <button className="bg-orange-600 text-white font-bold w-full text-center py-3">
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* main-background */}
       <div className="w-screen sticky z-20 top-0 bg-white shadow-md h-24 flex justify-center items-center  ">
@@ -174,25 +224,30 @@ function Navbar() {
           <div className="flex items-center gap-14">
             {navItems.map((item) =>
               item.name == "Sign In" ? (
-                <Link to={item.path}>
+                <div onClick={handleLogin} className="cursor-pointer">
                   <div className="flex items-center gap-3">
-                    <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
+                    {userData ? (
+                      <img src={userData.photo} alt="" />
+                    ) : (
+                      <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
+                    )}
+
                     <p className="text-md font-medium text-gray-700">
-                      {item.name}
+                      {userData ? userData.name : item.name}
                     </p>
-                    {item.name === "Cart" && cartData.length > 0 && (
+                    {item.name === "Cart" && cartData.length >= 0 && (
                       <p>{cartData.length}</p>
                     )}
                   </div>
-                </Link>
+                </div>
               ) : (
-                <Link to={item.path}>
+                <Link to={item.path} className="cursor-pointer">
                   <div className="flex items-center gap-3">
                     <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
                     <p className="text-md font-medium text-gray-700">
                       {item.name}
                     </p>
-                    {item.name === "Cart" && cartData.length > 0 && (
+                    {item.name === "Cart" && cartData.length >= 0 && (
                       <p>{cartData.length}</p>
                     )}
                   </div>

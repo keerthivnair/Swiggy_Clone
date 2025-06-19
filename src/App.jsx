@@ -12,12 +12,13 @@ function App() {
   
   const [coord,setCoord] = useState({lat:10.0013655,lng:76.310081})
   const visible = useSelector((state) => state.toggleSlice.searchBarToggle)
+  const login = useSelector((state) => state.toggleSlice.searchLoginToggle)
 
 
   
   return (
     <Coordinates.Provider value={{coord,setCoord}}>
-    <div className={visible? " overflow-hidden max-h-screen" : " "}>
+    <div className={visible || login ? " overflow-hidden max-h-screen" : " "}>
       <Routes>
         <Route path="/" element={<Navbar />}>
          <Route path="/" element={<Body />}/>
