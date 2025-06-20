@@ -8,29 +8,18 @@ import { CartContext, Coordinates, Visibility } from "../Context/ContextApi";
 library.add(fas, fab);
 import { useSelector, useDispatch } from "react-redux";
 import { toggleLoginBar, toggleSearchBar } from "../utils/toggleSlice";
+import SigninBtn from "./SigninBtn";
+import SignoutBtn from "./SignoutBtn";
 
 function Navbar() {
   const navItems = [
-    {
-      name: "Swiggy Corporate",
-      image: <FontAwesomeIcon icon="fa-solid fa-bag-shopping" />,
-      path: "/corporate",
-    },
+   
     {
       name: "Search  ",
       image: <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />,
       path: "/search",
     },
-    {
-      name: "Offers",
-      image: <FontAwesomeIcon icon="fa-solid fa-percent" />,
-      path: "/offers",
-    },
-    {
-      name: "Help",
-      image: <FontAwesomeIcon icon="fa-solid fa-suitcase-medical" />,
-      path: "/help",
-    },
+    
     {
       name: "Sign In",
       image: <FontAwesomeIcon icon="fa-solid fa-person" />,
@@ -161,32 +150,34 @@ function Navbar() {
             (login ? " right-0" : " -right-[40%]")
           }
         >
-          <div className="flex flex-col w-[70%] mr-14 gap-4 mt-3 ">
-            <div className="w-full flex justify-between">
+          <div className="flex flex-col w-[70%] mr-14 gap-7 mt-3 ">
+            <div className="w-full flex justify-between items-center">
               <div
                 className=" flex  items-center w-[40px] h-[40px] cursor-pointer"
                 onClick={handleLogin}
               >
                 <FontAwesomeIcon icon="fa-solid fa-xmark" />
               </div>
-              <img className="w-[75px] h-[90px]" src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" />
+              <img
+                className="w-[75px] h-[90px]"
+                src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r"
+                alt=""
+              />
             </div>
 
-            <h1 className="font-bold text-3xl">Login</h1>
+            <h1 className="border-b-2 pb-5 border-black font-bold text-3xl">
+              Login
+            </h1>
 
             <div>
-              <button className="bg-orange-600 text-white font-bold w-full text-center py-3">
-                Login
-              </button>
-              <p className="text-small">
+              <SigninBtn />
+              <p className="text-base mt-2 opacity-70">
                 By clicking on Login, I accept the Terms & Conditions & Privacy
                 Policy
               </p>
             </div>
             <div>
-              <button className="bg-orange-600 text-white font-bold w-full text-center py-3">
-                Logout
-              </button>
+              <SignoutBtn />
             </div>
           </div>
         </div>
@@ -197,11 +188,12 @@ function Navbar() {
         <div className="flex w-[80%] justify-between">
           <div className="flex items-center gap-7">
             <Link to="/">
-              <img
-                className="w-7"
-                src="https://w7.pngwing.com/pngs/55/100/png-transparent-swiggy-hd-logo-thumbnail.png"
-                alt=""
-              />
+              <div className="w-7">
+                <img
+                  src="https://w7.pngwing.com/pngs/55/100/png-transparent-swiggy-hd-logo-thumbnail.png"
+                  alt=""
+                />
+              </div>
             </Link>
             <div
               className="cursor-pointer flex items-center gap-2"
@@ -227,7 +219,11 @@ function Navbar() {
                 <div onClick={handleLogin} className="cursor-pointer">
                   <div className="flex items-center gap-3">
                     {userData ? (
-                      <img src={userData.photo} alt="" />
+                      <img
+                        className="w-8 h-8 rounded-lg"
+                        src={userData.photo}
+                        alt=""
+                      />
                     ) : (
                       <p className="mt-1 text-gray-700 text-xl">{item.image}</p>
                     )}

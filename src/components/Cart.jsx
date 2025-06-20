@@ -4,12 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteItem, clearrCart } from "../utils/cartSlice";
 import toast from "react-hot-toast";
+import { toggleLoginBar } from "../utils/toggleSlice";
+
+let nonveg =
+  "https://packagingguruji.com/wp-content/uploads/2022/09/New-Non-Logo.png";
+let veg =
+  " https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 
 function Cart() {
   let totalPrice = 0;
-  // const {  setCartData } = useContext(CartContext);
-
   const cartData = useSelector((state) => state.cartSlice.cartItems);
+  const resInfo = useSelector((state) => state.cartSlice.resInfo);
 
   for (let i = 0; i < cartData.length; i++) {
     totalPrice += cartData[i].price / 100 || cartData[i].defaultPrice / 100;
@@ -41,96 +46,140 @@ function Cart() {
     );
   }
   const dispatch = useDispatch();
-
   function handleRemoveFromCart(i) {
     let newArr = [...cartData];
     newArr.splice(i, 1);
     if (newArr.length <= 0) {
-      dispatch(clearrCart());
+      clearCart()
     }
     dispatch(deleteItem(newArr));
     toast.success("Item removed from cart");
     // setCartData(newArr);
-  }
-  const navigate = useNavigate()
+  };
 
   function clearCart() {
     dispatch(clearrCart());
     toast.success("Empty Cart !");
   }
-  function handlePlaceOrder(){
-    {
-      userData ? toast.success('Order Placed'): 
-      toast.error("Cannot place order. Please login first.")
-      
-      setInterval(()=>{
-        navigate("/signIn")
-      },2000)
-      
+  const userData = useSelector((state) => state.authSlice.userData);
+  function handlePlaceOrder() {
+    if (!userData) {
+      toast.error("Please login to place order");
+      dispatch(toggleLoginBar());
+      return;
     }
-    
+    toast.success("Your order has been placed");
   }
-
-  const userData = useSelector((state)=>state.authSlice.userData)
 
   return (
     <div className="w-full">
-      <div className="w-[50%] mx-auto">
-        {cartData.map((data, i) => (
-          <div className="flex w-full justify-between my-5 p-2">
-            <div className="w-[70%]">
-              <h2 className=" text-2xl">{data.name}</h2>
-              <p className="mt-2">
-                ₹ {data.price / 100 || data.defaultPrice / 100}
+      <div className="w-[75%] mx-auto">
+        <Link to={`/restaurantMenu/${resInfo.id}`}>
+          <div className="my-10 flex gap-5">
+            <img
+              className="rounded-xl w-40 aspect-square"
+              src={
+                "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" +
+                resInfo.cloudinaryImageId
+              }
+              alt=""
+            />
+            <div>
+              <p className="text-5xl border-b-2 border-black pb-3 ">
+                {resInfo.name}
               </p>
-            </div>
-
-            <div className="cursor-pointer w-[20%] relative h-full">
-              {data.imageId ? (
-                <>
-                  <img
-                    src={
-                      "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" +
-                      data.imageId
-                    }
-                    alt=""
-                    className="aspect-square rounded-xl"
-                  />
-                  <button
-                    // onClick={handleAddToCart}
-                    className="cursor-pointer bg-red-400 absolute bottom-[-23px] left-10 border px-2 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-white font-bold text-sm"
-                    onClick={() => handleRemoveFromCart(i)}
-                  >
-                    REMOVE
-                  </button>
-                </>
-              ) : (
-                <button
-                  //   onClick={handleAddToCart}
-                  className="cursor-pointer bg-red-400 absolute left-10 border px-2 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-white font-bold text-sm"
-                  onClick={() => handleRemoveFromCart(i)}
-                >
-                  REMOVE
-                </button>
-              )}
+              <p className="mt-3 text-xl ">{resInfo.areaName}</p>
             </div>
           </div>
-        ))}
+        </Link>
+        <hr className="my-5 border-2" />
+        <div>
+          {cartData.map(
+            (
+              {
+                name,
+                defaultPrice,
+                price,
+                itemAttribute,
+                ratings: {
+                  aggregatedRating: { rating, ratingCountV2 },
+                },
+                description,
+                imageId,
+              },
+              i
+            ) => {
+              return (
+                <>
+                  <div
+                    key={imageId}
+                    className="flex w-full my-5 justify-between min-h-[182px]"
+                  >
+                    <div className="w-[55%] md:w-[70%]">
+                      <img
+                        className="w-5 rounded-sm"
+                        src={
+                          itemAttribute && itemAttribute.vegClassifier == "VEG"
+                            ? veg
+                            : nonveg
+                        }
+                        alt=""
+                        srcset=""
+                      />
+                      <h2 className="font-bold text-lg">{name}</h2>
+                      <p className="font-bold text-lg">
+                        ₹{defaultPrice / 100 || price / 100}{" "}
+                      </p>
 
-        <h1>Total - ₹{totalPrice}</h1>
-        <div className="flex flex-row-reverse justify-between">
+                      <div className="flex items-center gap-1">
+                        {" "}
+                        <i className={"fi mt-1 text-xl fi-ss-star"}></i>{" "}
+                        <span>
+                          {rating} ({ratingCountV2})
+                        </span>
+                      </div>
+
+                      <div className="line-clamp-2">{description}</div>
+                    </div>
+                    <div className="w-[40%] md:w-[20%] relative h-full">
+                      <img
+                        className="rounded-xl aspect-square"
+                        src={
+                          "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" +
+                          imageId
+                        }
+                        alt=""
+                      />
+                      <button
+                        onClick={() => handleRemoveFromCart(i)}
+                        className="bg-white absolute bottom-[-20px] left-1/2 -translate-x-1/2 text-base text-red-500 font-bold rounded-xl border px-5 py-2 drop-shadow"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <hr className="my-10" />
+                </>
+              );
+            }
+          )}
+        </div>
+
+        <h1 className="text-2xl">
+          Total - <span className="font-bold">₹{totalPrice}</span>
+        </h1>
+        <div className="flex justify-between">
           <button
-            className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer"
-            onClick={clearCart}
-          >
-            Clear Cart
-          </button>
-    
-          <button
-            className="p-3 bg-green-600 rounded-lg my-7 cursor-pointer"
             onClick={handlePlaceOrder}
+            className="p-3 bg-green-600 rounded-lg my-7"
           >
             Place order
+          </button>
+          <button
+            onClick={clearCart}
+            className="p-3 bg-green-600 rounded-lg my-7"
+          >
+            clear cart
           </button>
         </div>
       </div>

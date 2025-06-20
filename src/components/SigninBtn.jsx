@@ -4,8 +4,9 @@ import { auth, provider } from "../config/firebaseAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserData, removeUserData } from "../utils/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toggleLoginBar } from "../utils/toggleSlice";
 
-function SigninPage() {
+function SigninBtn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   async function handleAuth() {
@@ -15,35 +16,34 @@ function SigninPage() {
       photo: data.user.photoURL,
     };
     dispatch(addUserData(userData));
-  navigate("/");
+    navigate("/");
+    dispatch(toggleLoginBar())
   }
-  
-  // const userData = useSelector((state) => state.authSlice.userData);
-  
+
+  const userData = useSelector((state) => state.authSlice.userData);
+
   async function handleLogout() {
     try {
       await signOut(auth);
       dispatch(removeUserData());
-      navigate("/")
-    }
-    catch(error) {
-      console.error("logout error",error)
+      navigate("/");
+    } catch (error) {
+      console.error("logout error", error);
     }
   }
 
   return (
     <div>
-      Login
-      <button onClick={handleAuth} className="bg-slate-300 p-5 m-6">
-        Google login
-      </button>
-      {userData && (
-        <button onClick={handleLogout} className="bg-slate-300 p-5 m-6">
-          Logout
+      {!userData && (
+        <button
+          onClick={handleAuth}
+          className="cursor-pointer bg-orange-600 text-white font-bold w-full text-center py-3"
+        >
+          Login
         </button>
       )}
     </div>
   );
 }
 
-export default SigninPage;
+export default SigninBtn;
