@@ -75,7 +75,7 @@ function RestaurantMenu() {
 
   return (
     <div className="w-full">
-      <div className="w-[800px]  mx-auto p-4">
+      <div className="w-[95%] md:w-[800px]  mx-auto p-4">
         <p className="text-[10px] font-bold text-slate-500 flex gap-1 ">
           {" "}
           <Link to="/">
@@ -404,7 +404,7 @@ function DetailMenu({ resInfo }) {
           return (
             <>
               <div className="flex justify-between w-full min-h-[182px]">
-                <div className="w-[70%] flex flex-col justify-between items-start">
+                <div className="w-[55%] md:w-[70%] flex flex-col justify-between items-start">
                   <div>
                     {" "}
                     {vegClassifier == "VEG" ? (
@@ -465,7 +465,7 @@ function DetailMenu({ resInfo }) {
                     </button>
                   )}
                 </div>
-                <div className="cursor-pointer w-[20%] relative h-full">
+                <div className="w-[40%] cursor-pointer md:w-[20%] relative h-full">
                   {imageId ? (
                     <>
                       <img
@@ -478,7 +478,7 @@ function DetailMenu({ resInfo }) {
                       />
                       <button
                         onClick={handleAddToCart}
-                        className="bg-white absolute bottom-[-23px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
+                        className="bg-white absolute bottom-[-23px] left-1/2 -translate-x-1/2 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
                       >
                         ADD
                       </button>
@@ -486,7 +486,7 @@ function DetailMenu({ resInfo }) {
                   ) : (
                     <button
                       onClick={handleAddToCart}
-                      className="bg-white absolute bottom-[-120px] left-6 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
+                      className="bg-white absolute bottom-[-120px] left-1/2 -translate-x-1/2 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
                     >
                       ADD
                     </button>

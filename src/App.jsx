@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { CartContext, Coordinates, Visibility } from "./Context/ContextApi";
 import Cart from "./components/Cart";
 import SigninPage from "./components/SigninBtn";
+import Search from "./components/Search";
 
 function App() {
   
@@ -24,6 +25,8 @@ function App() {
          <Route path="/" element={<Body />}/>
          <Route path="/restaurantmenu/:id" element={<RestaurantMenu />}/>
          <Route path="/cart" element={<Cart/>}/>
+         <Route path="/search" element={<Search/>}/>
+         
          <Route path="*" element={<h1>coming soon .........</h1>}/>
         </Route>
       </Routes>

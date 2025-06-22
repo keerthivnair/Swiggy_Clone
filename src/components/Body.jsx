@@ -61,7 +61,7 @@ function Body() {
   
   return (
     <div className="w-full overflow-y-visible">
-      <div className="w-[82%] flex mx-auto mt-3 border-b border-gray-200  overflow-hidden  flex-col">
+      <div className="w-[100%]  px-10  sm:w-[95%] lg:w-[85%] flex mx-auto mt-3 border-b border-gray-200  overflow-hidden  flex-col">
         <OnYourMind data={onYourMindData}  />
         <TopRestaurants data={topRestaurantsData}  title={topResTitle}/>
         <OnlineFoodDelivery data={filterVal ?filteredData: topRestaurantsData} title={onlineTitle}/> 

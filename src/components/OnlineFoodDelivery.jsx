@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setFilterVal } from "../utils/filterSlice";
 
-const filterOptions = [
+
+
+function OnlineFoodDelivery({ data, title }) {
+  const filterOptions = [
   {
     filterName: "Ratings 4.0+",
   },
@@ -18,8 +21,6 @@ const filterOptions = [
     filterName: "Less than Rs. 300",
   },
 ];
-
-function OnlineFoodDelivery({ data, title }) {
   const [activeBtn, setActiveBtn] = useState(null);
   const dispatch = useDispatch();
 
@@ -29,10 +30,10 @@ function OnlineFoodDelivery({ data, title }) {
   dispatch(setFilterVal(activeBtn));
 
   return (
-    <div className="mt-12 w-full flex flex-col gap-7">
+    <div className="mt-12 w-full flex flex-col gap-7 ">
       <p className="text-2xl font-bold">{title}</p>
 
-      <div className="mb-7 flex gap-3">
+      <div className="mb-7 flex gap-3 flex-wrap">
         {filterOptions.map((option) => (
           <button
             onClick={() => handlefilterBtn(option.filterName)}
@@ -47,7 +48,7 @@ function OnlineFoodDelivery({ data, title }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-4 gap-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-7">
         {data &&
           data.map(({ info, cta: { link } }) => (
             <RestaurantCard {...info} link={link} />

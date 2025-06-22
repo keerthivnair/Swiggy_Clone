@@ -13,13 +13,12 @@ import SignoutBtn from "./SignoutBtn";
 
 function Navbar() {
   const navItems = [
-   
     {
       name: "Search  ",
       image: <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />,
       path: "/search",
     },
-    
+
     {
       name: "Sign In",
       image: <FontAwesomeIcon icon="fa-solid fa-person" />,
@@ -87,11 +86,11 @@ function Navbar() {
         ></div>
         <div
           className={
-            "flex overflow-y-scroll justify-end p-5 bg-white w-[40%] z-50 h-full absolute duration-300 " +
-            (visible ? "left-0" : " -left-[40%]")
+            "flex overflow-y-scroll justify-end p-5 bg-white w-[100%]  md:w-[40%] z-50 h-full absolute duration-300 " +
+            (visible ? "left-0" : " -left-[100%] md:-left-[40%]")
           }
         >
-          <div className="flex flex-col w-[70%] mr-6 gap-4 mt-3 ">
+          <div className="flex flex-col md:w-[70%] mr-6 gap-4 mt-3 ">
             <div
               className=" flex  items-center w-[40px] h-[40px] cursor-pointer"
               onClick={handleVisibility}
@@ -146,8 +145,8 @@ function Navbar() {
         ></div>
         <div
           className={
-            "flex overflow-y-scroll justify-end p-5 bg-white w-[40%] z-50 h-full absolute duration-300 " +
-            (login ? " right-0" : " -right-[40%]")
+            "flex overflow-y-scroll justify-end p-5 bg-white w-full md:w-[40%] z-50 h-full absolute duration-300 " +
+            (login ? " right-0" : "  -right-[100%] md:-right-[40%]")
           }
         >
           <div className="flex flex-col w-[70%] mr-14 gap-7 mt-3 ">
@@ -184,8 +183,8 @@ function Navbar() {
       </div>
 
       {/* main-background */}
-      <div className="w-screen sticky z-20 top-0 bg-white shadow-md h-24 flex justify-center items-center  ">
-        <div className="flex w-[80%] justify-between">
+      <div className="w-screen p-10 sticky z-20 top-0 bg-white shadow-md h-24 flex justify-center items-center  ">
+        <div className="flex w-full md:w-[80%] justify-between">
           <div className="flex items-center gap-7">
             <Link to="/">
               <div className="w-7">
@@ -213,7 +212,7 @@ function Navbar() {
               />
             </div>
           </div>
-          <div className="flex items-center gap-14">
+          <div className="md:flex hidden items-center gap-2 md:gap-14">
             {navItems.map((item) =>
               item.name == "Sign In" ? (
                 <div onClick={handleLogin} className="cursor-pointer">
@@ -247,6 +246,28 @@ function Navbar() {
                       <p>{cartData.length}</p>
                     )}
                   </div>
+                </Link>
+              )
+            )}
+          </div>
+          <div className="md:hidden p-10 flex gap-10">
+            {navItems.map((data) =>
+              data.name == "Sign In" ? (
+                userData ? (
+                  <img
+                  onClick={handleLogin}
+                    className="w-8 h-8 rounded-lg cursor-pointer"
+                    src={userData.photo}
+                    alt=""
+                  />
+                ) : (
+                  <p onClick={handleLogin} className="scale-150 cursor-pointer">
+                    {data.image}
+                  </p>
+                )
+              ) : (
+                <Link to={data.path} className="cursor-pointer">
+                  <p>{data.image}</p>
                 </Link>
               )
             )}
