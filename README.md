@@ -1,12 +1,40 @@
-# React + Vite
+# 🍴 Kravings – Food Ordering App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Kravings** is a personal take on a Swiggy-style food ordering platform.  
+It's built from scratch to learn real-world frontend and backend flow with API integration, auth, and state management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔧 Tech Stack
 
-## Expanding the ESLint configuration
+- **React** (Vite) + **Redux Toolkit**
+- **Firebase** for Google auth
+- **Express.js** proxy server (for Swiggy APIs and CORS management)
+- **React Hot Toast** for alerts
+- **Vercel** for frontend + backend hosting
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## ✅ Features
+
+- Real-time data from Swiggy APIs (via custom proxy)
+- Google login with Firebase popup
+- Clean UI with dynamic restaurant and menu views
+- Global state using Redux
+- Proxy backend handles CORS with Express.js
+
+---
+
+## 🔗 Live Demo
+
+👉 [Click here to try it](https://food-ordering-45aus1iro-kees-projects-cdb7990e.vercel.app/)
+
+---
+
+## ⚙ Dev Setup
+
+```bash
+git clone https://github.com/keerthivnair/Swiggy_Clone.git
+cd swiggy-clone
+npm i
+npm run dev
