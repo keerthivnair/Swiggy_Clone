@@ -27,7 +27,7 @@ It's built from scratch to learn real-world frontend and backend flow with API i
 
 ## 🔗 Live Demo
 
-👉 [Click here to try it](https://food-ordering-45aus1iro-kees-projects-cdb7990e.vercel.app/)
+👉 [Check it out](https://food-ordering-45aus1iro-kees-projects-cdb7990e.vercel.app/)
 
 ---
 
