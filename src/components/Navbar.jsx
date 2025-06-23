@@ -49,7 +49,7 @@ function Navbar() {
   async function searchResultFtn(val) {
     if (val == "") return;
     const res = await fetch(
-      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/misc/place-autocomplete?input=${val}`
+      `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`
     );
     const json = await res.json();
     // console.log(json.data)
@@ -58,7 +58,7 @@ function Navbar() {
   async function fetchLanAndLon(id) {
     if (id == "") return;
     const res = await fetch(
-      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/misc/address-recommend?place_id=${id}`
+      `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`
     );
     const json = await res.json();
     setCoord({
@@ -255,7 +255,7 @@ function Navbar() {
               data.name == "Sign In" ? (
                 userData ? (
                   <img
-                  onClick={handleLogin}
+                    onClick={handleLogin}
                     className="w-8 h-8 rounded-lg cursor-pointer"
                     src={userData.photo}
                     alt=""

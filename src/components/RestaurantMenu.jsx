@@ -30,7 +30,7 @@ function RestaurantMenu() {
   // console.log(id.split("-").at(-1).split("rest")[1]);
   const fetchData = async () => {
     const data = await fetch(
-      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
+      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
     );
     const json = await data.json();
     console.log(json)
@@ -476,7 +476,7 @@ function DetailMenu({ resInfo }) {
                 <hr className="my-5 border-gray-300" />
               )}
               {isDiffRes && (
-                <div className="p-8 z-40 w-[520px] gap-5 h-[215px]  fixed bottom-7 left-[33%] bg-white flex flex-col justify-around ">
+                <div className="p-8 z-40 w-[520px] gap-5 h-[215px]   fixed bottom-7 left-[33%] bg-white flex flex-col justify-around ">
                   <h1 className="text-start font-bold text-lg">
                     Items already in cart
                   </h1>

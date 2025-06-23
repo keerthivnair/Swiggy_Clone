@@ -31,7 +31,7 @@ function Search() {
 
   async function fetchDishes() {
     let data = await fetch(
-      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/restaurants/search/v3?lat=${coord.lat}&lng=${coord.lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`
+      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${coord.lat}&lng=${coord.lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`
     );
     let res = await data.json();
     // console.log(res)
@@ -41,10 +41,10 @@ function Search() {
       );
     setDishes(data1);
   }
- 
+
   async function fetchRestaurantData() {
     let data = await fetch(
-      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/restaurants/search/v3?lat=9.9312328&lng=76.26730409999999&str=${searchQuery}&trackingId=9fdc5ba9-91d2-9eb9-23f7-a443ffde361c&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=RESTAURANT`
+      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=9.9312328&lng=76.26730409999999&str=${searchQuery}&trackingId=9fdc5ba9-91d2-9eb9-23f7-a443ffde361c&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=RESTAURANT`
     );
     let res = await data.json();
     const data1 =
