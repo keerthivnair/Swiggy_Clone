@@ -9,6 +9,7 @@ It's built from scratch to learn real-world frontend and backend flow with API i
 
 - **React** (Vite) + **Redux Toolkit**
 - **Firebase** for Google auth
+- **Tailwind** for styling and Responsiveness
 - **Express.js** proxy server (for Swiggy APIs and CORS management)
 - **React Hot Toast** for alerts
 - **Vercel** for frontend + backend hosting
