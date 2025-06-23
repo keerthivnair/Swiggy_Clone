@@ -16,7 +16,7 @@ function Body() {
   console.log(coord.lat,coord.lng)
   async function fetchData() {
     const response = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${coord.lat}&lng=${coord.lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`
+      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/restaurants/list/v5?lat=${coord.lat}&lng=${coord.lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`
     );
     
     // https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=10.0013655&lng=76.310081&restaurantId=763910&catalog_qa=undefined&submitAction=ENTER

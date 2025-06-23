@@ -30,7 +30,7 @@ function RestaurantMenu() {
   // console.log(id.split("-").at(-1).split("rest")[1]);
   const fetchData = async () => {
     const data = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
+      `https://cors-by-codethread-for-swiggy-vercel-app/cors/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
     );
     const json = await data.json();
     console.log(json)
