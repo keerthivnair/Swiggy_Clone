@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleLoginBar, toggleSearchBar } from "../utils/toggleSlice";
 import SigninBtn from "./SigninBtn";
 import SignoutBtn from "./SignoutBtn";
+import { fetchSwiggy } from "../api/fetchSwiggy";
 
 function Navbar() {
   const navItems = [
@@ -48,19 +49,17 @@ function Navbar() {
   }
   async function searchResultFtn(val) {
     if (val == "") return;
-    const res = await fetch(
-      `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`
-    );
-    const json = await res.json();
+    let data1 = `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${val}`;
+    const json = await fetchSwiggy(data1);
+    // const json = await res.json();
     // console.log(json.data)
     setSearchResult(json.data);
   }
   async function fetchLanAndLon(id) {
     if (id == "") return;
-    const res = await fetch(
-      `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`
-    );
-    const json = await res.json();
+    let data2 = `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`;
+    const json = await fetchSwiggy(data2);
+    // const json = await res.json();
     setCoord({
       lat: json.data[0].geometry.location.lat,
       lng: json.data[0].geometry.location.lng,
@@ -187,9 +186,9 @@ function Navbar() {
         <div className="flex w-full md:w-[80%] justify-between">
           <div className="flex items-center gap-7">
             <Link to="/">
-              <div className="w-7">
+              <div className="w-10 ">
                 <img
-                  src="https://w7.pngwing.com/pngs/55/100/png-transparent-swiggy-hd-logo-thumbnail.png"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFNgVJjHAej8MXISQbTs7u4Q2yEBjt9Gd0vY6pQbU6dcRWxHRKfL_AvbnUYVP-0GlVM-g&usqp=CAU"
                   alt=""
                 />
               </div>

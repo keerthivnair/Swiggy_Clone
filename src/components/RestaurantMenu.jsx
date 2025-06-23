@@ -15,6 +15,7 @@ import { addToCart, clearrCart } from "../utils/cartSlice";
 import toast from "react-hot-toast";
 import AddToCartBtn from "./AddToCartBtn";
 import { toggleDiffRes } from "../utils/toggleSlice";
+import { fetchSwiggy } from "../api/fetchSwiggy";
 
 const itemContext = createContext();
 
@@ -29,11 +30,10 @@ function RestaurantMenu() {
   let mainId = id.split("-").at(-1).split("rest")[1];
   // console.log(id.split("-").at(-1).split("rest")[1]);
   const fetchData = async () => {
-    const data = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
-    );
-    const json = await data.json();
-    console.log(json)
+    const menu = `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`;
+    const json = await fetchSwiggy(menu);
+    // const json = await data.json();
+    console.log(json);
 
     setResInfo(json?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
@@ -351,7 +351,7 @@ function DetailMenu({ resInfo }) {
 
           // console.log(getResInfoFromLocalStorage)
           const dispatch = useDispatch();
-          const isDiffRes = useSelector((state)=>state.toggleSlice.isDiffRes)
+          const isDiffRes = useSelector((state) => state.toggleSlice.isDiffRes);
 
           const [isTruncate, setIsTruncate] = useState(false);
           const [isExpanded, setIsExpanded] = useState(false);
@@ -367,13 +367,13 @@ function DetailMenu({ resInfo }) {
             setIsExpanded(!isExpanded);
           };
           function handleIsDiffRes() {
-            dispatch(toggleDiffRes())
+            dispatch(toggleDiffRes());
           }
 
           function clearCart() {
             dispatch(clearrCart());
             toast.success("Empty Cart !");
-            handleIsDiffRes()
+            handleIsDiffRes();
           }
 
           return (

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { fetchSwiggy } from "../api/fetchSwiggy";
 
 function Search() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,10 +31,9 @@ function Search() {
   }
 
   async function fetchDishes() {
-    let data = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${coord.lat}&lng=${coord.lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`
-    );
-    let res = await data.json();
+    let dataa = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${coord.lat}&lng=${coord.lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`;
+    let res = await fetchSwiggy(dataa);
+    // let res = await data.json();
     // console.log(res)
     const data1 =
       (res?.data?.cards[0]?.groupedCard?.cardGroupMap?.DISH?.cards).filter(
@@ -43,10 +43,9 @@ function Search() {
   }
 
   async function fetchRestaurantData() {
-    let data = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=9.9312328&lng=76.26730409999999&str=${searchQuery}&trackingId=9fdc5ba9-91d2-9eb9-23f7-a443ffde361c&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=RESTAURANT`
-    );
-    let res = await data.json();
+    let dataa = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=9.9312328&lng=76.26730409999999&str=${searchQuery}&trackingId=9fdc5ba9-91d2-9eb9-23f7-a443ffde361c&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=RESTAURANT`;
+    let res = await fetchSwiggy(dataa);
+    // let res = await data.json();
     const data1 =
       (res?.data?.cards[0]?.groupedCard?.cardGroupMap?.RESTAURANT?.cards).filter(
         (data) => data?.card?.card?.info
@@ -74,7 +73,10 @@ function Search() {
   return (
     <div className="w-full mt-10 md:w-[800px] mx-auto">
       <div className="w-full relative">
-        <FontAwesomeIcon icon="fa-solid fa-arrow-left" className="absolute text-md mt-1 ml-7 top-1/2 -translate-y-1/2" />
+        <FontAwesomeIcon
+          icon="fa-solid fa-arrow-left"
+          className="absolute text-md mt-1 ml-7 top-1/2 -translate-y-1/2"
+        />
         <input
           onKeyDown={(e) => handleSearchQuery(e)}
           // onChange={(e) => setSearchQuery(e.target.value)}
@@ -82,7 +84,10 @@ function Search() {
           className=" text-xl w-[90%] ml-5 focus:outline-none border-2 pl-8 py-3 mt-10 mb-10"
           placeholder="Search for restaurants and food"
         />
-        <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" className="absolute bottom-[41%] right-[10%]" />
+        <FontAwesomeIcon
+          icon="fa-solid fa-magnifying-glass"
+          className="absolute bottom-[41%] right-[10%]"
+        />
       </div>
 
       <div className="mb-7 flex gap-3 flex-wrap ml-5">
