@@ -13,6 +13,8 @@ import { CartContext, Coordinates } from "../Context/ContextApi";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, clearrCart } from "../utils/cartSlice";
 import toast from "react-hot-toast";
+import AddToCartBtn from "./AddToCartBtn";
+import { toggleDiffRes } from "../utils/toggleSlice";
 
 const itemContext = createContext();
 
@@ -31,7 +33,7 @@ function RestaurantMenu() {
       `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${coord.lat}&lng=${coord.lng}&restaurantId=${mainId}&submitAction=ENTER`
     );
     const json = await data.json();
-    // console.log(json)
+    console.log(json)
 
     setResInfo(json?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
@@ -346,36 +348,11 @@ function DetailMenu({ resInfo }) {
 
           // const { cartData, setCartData } = useContext(CartContext);
           const cartData = useSelector((state) => state.cartSlice.cartItems);
-          const getResInfoFromLocalStorage = useSelector(
-            (state) => state.cartSlice.resInfo
-          );
+
           // console.log(getResInfoFromLocalStorage)
           const dispatch = useDispatch();
-          const [isDiffRes, setIsDiffRes] = useState(false);
-          function handleAddToCart() {
-            // console.log(resInfo)
+          const isDiffRes = useSelector((state)=>state.toggleSlice.isDiffRes)
 
-            const isAdded = cartData.find((data) => data.id === info.id);
-
-            // let getResInfoFromLocalStorage =
-            //   JSON.parse(localStorage.getItem("resInfo")) || [];
-            if (!isAdded) {
-              if (
-                getResInfoFromLocalStorage.name == resInfo.name ||
-                getResInfoFromLocalStorage.length == 0
-              ) {
-                dispatch(addToCart({ info, resInfo }));
-                toast.success("Item added successfully to Cart");
-
-                // console.log(resInfo)
-              } else {
-                toast.error("Your cart contains items from other restaurant.");
-                setIsDiffRes(!isDiffRes);
-              }
-            } else {
-              toast.error("Item already added to cart ");
-            }
-          }
           const [isTruncate, setIsTruncate] = useState(false);
           const [isExpanded, setIsExpanded] = useState(false);
           let textRef = useRef("");
@@ -390,15 +367,13 @@ function DetailMenu({ resInfo }) {
             setIsExpanded(!isExpanded);
           };
           function handleIsDiffRes() {
-            setIsDiffRes(false);
+            dispatch(toggleDiffRes())
           }
-
-          
 
           function clearCart() {
             dispatch(clearrCart());
             toast.success("Empty Cart !");
-            setIsDiffRes(false)
+            handleIsDiffRes()
           }
 
           return (
@@ -476,20 +451,22 @@ function DetailMenu({ resInfo }) {
                         alt=""
                         className="aspect-square rounded-xl"
                       />
-                      <button
-                        onClick={handleAddToCart}
-                        className="bg-white absolute bottom-[-23px] left-1/2 -translate-x-1/2 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
-                      >
-                        ADD
-                      </button>
+                      <AddToCartBtn
+                        info={info}
+                        resInfo={resInfo}
+                        id={id}
+                        handleIsDiffRes={handleIsDiffRes}
+                      />
                     </>
                   ) : (
-                    <button
-                      onClick={handleAddToCart}
-                      className="bg-white absolute bottom-[-120px] left-1/2 -translate-x-1/2 border px-8 py-2 rounded-md shadow-xl shadow-gray-200 border-gray-300 text-green-600 font-bold text-lg"
-                    >
-                      ADD
-                    </button>
+                    <div className="flex justify-center items-center absolute top-[100px] right-[145px] md:right-[70px]">
+                      <AddToCartBtn
+                        info={info}
+                        resInfo={resInfo}
+                        id={id}
+                        handleIsDiffRes={handleIsDiffRes}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -499,7 +476,7 @@ function DetailMenu({ resInfo }) {
                 <hr className="my-5 border-gray-300" />
               )}
               {isDiffRes && (
-                <div className="p-8 z-40 w-[520px] gap-5 h-[215px] shadow-2xl  fixed bottom-7 left-[33%] bg-white flex flex-col justify-around ">
+                <div className="p-8 z-40 w-[520px] gap-5 h-[215px]  fixed bottom-7 left-[33%] bg-white flex flex-col justify-around ">
                   <h1 className="text-start font-bold text-lg">
                     Items already in cart
                   </h1>

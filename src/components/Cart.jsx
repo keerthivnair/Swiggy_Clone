@@ -20,6 +20,10 @@ function Cart() {
     totalPrice += cartData[i].price / 100 || cartData[i].defaultPrice / 100;
   }
 
+  function clearCart() {
+    dispatch(clearrCart());
+    toast.success("Empty Cart !");
+  }
   if (cartData.length <= 0) {
     return (
       <div className="flex flex-col gap-7 justify-center items-center w-full mt-[120px]">
@@ -50,17 +54,13 @@ function Cart() {
     let newArr = [...cartData];
     newArr.splice(i, 1);
     if (newArr.length <= 0) {
-      clearCart()
+      clearCart();
     }
     dispatch(deleteItem(newArr));
     toast.success("Item removed from cart");
     // setCartData(newArr);
-  };
-
-  function clearCart() {
-    dispatch(clearrCart());
-    toast.success("Empty Cart !");
   }
+
   const userData = useSelector((state) => state.authSlice.userData);
   function handlePlaceOrder() {
     if (!userData) {
@@ -72,9 +72,9 @@ function Cart() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full md:w-[80%] mx-auto">
       <div className="w-[75%] mx-auto">
-        <Link to={`/restaurantMenu/${resInfo.id}`}>
+        <Link to={`/restaurantMenu/rest${resInfo.id}`}>
           <div className="my-10 flex gap-5">
             <img
               className="rounded-xl w-40 aspect-square"

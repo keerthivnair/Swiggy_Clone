@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useEffect } from "react";
+import Dishes from "./Dishes";
+import SearchRestaurant from "./SearchRestaurant";
+import { Coordinates } from "../Context/ContextApi";
+library.add(fas, fab);
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
 
 function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dishes, setDishes] = useState([]);
   const [restaurantData, setRestaurantData] = useState([]);
+  const { coord, setCoord } = useContext(Coordinates);
 
   const filterOptions = [
     {
@@ -22,7 +31,7 @@ function Search() {
 
   async function fetchDishes() {
     let data = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=9.9312328&lng=76.26730409999999&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`
+      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${coord.lat}&lng=${coord.lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=20a2c8e1-0e5c-314e-34a0-c0761dadb74d&selectedPLTab=DISH`
     );
     let res = await data.json();
     // console.log(res)
@@ -55,21 +64,34 @@ function Search() {
     }
   }, [searchQuery]);
 
+  function handleSearchQuery(e) {
+    let val = e.target.value.trim();
+    if (e.keyCode == 13) {
+      setSearchQuery(val);
+    }
+  }
+
   return (
-    <div className="w-full md:w-[800px] mx-auto">
-      <input
-        onChange={(e) => setSearchQuery(e.target.value)}
-        type="text"
-        className="w-[90%]  focus:outline-none border-2 px-10 py-3 mt-10 mb-10"
-        placeholder="Search for restaurants and food"
-      />
-      <div className="mb-7 flex gap-3 flex-wrap">
+    <div className="w-full mt-10 md:w-[800px] mx-auto">
+      <div className="w-full relative">
+        <FontAwesomeIcon icon="fa-solid fa-arrow-left" className="absolute text-md mt-1 ml-7 top-1/2 -translate-y-1/2" />
+        <input
+          onKeyDown={(e) => handleSearchQuery(e)}
+          // onChange={(e) => setSearchQuery(e.target.value)}
+          type="text"
+          className=" text-xl w-[90%] ml-5 focus:outline-none border-2 pl-8 py-3 mt-10 mb-10"
+          placeholder="Search for restaurants and food"
+        />
+        <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" className="absolute bottom-[41%] right-[10%]" />
+      </div>
+
+      <div className="mb-7 flex gap-3 flex-wrap ml-5">
         {filterOptions.map((option) => (
           <button
             onClick={() => handlefilterBtn(option.filterName)}
             className={
               "text-sm flex gap-2 items-center filterBtn" +
-              (activeBtn === option.filterName ? " active" : " ")
+              (activeBtn === option.filterName ? " active " : " ")
             }
           >
             {option.filterName}
@@ -77,49 +99,10 @@ function Search() {
         ))}
       </div>
 
-      <div className="w-full md:w-[800px] p-4 bg-[#f4f5f7] grid grid-cols-2 gap-3">
+      <div className="w-full md:w-[800px] p-4 grid grid-cols-1 md:grid-cols-2  bg-[#f4f5f7]">
         {activeBtn == "Dishes"
-          ? dishes.map(
-              ({
-                card: {
-                  card: {
-                    info: { imageId = "", name, price, isVeg = 0 },
-                    restaurant: {
-                      info: {
-                        id,
-                        name: resName,
-                        avgRating,
-                        sla: { slaString },
-                      },
-                    },
-                  },
-                },
-              }) => 
-                <div className="w-full  bg-white h-[400px] ">
-                    <div></div>
-                    <div></div>
-                </div>
-            )
-          : restaurantData.map(
-              ({
-                card: {
-                  card: {
-                    info: {
-                      id,
-                      cloudinaryImageId,
-                      cuisines,
-                      promoted = false,
-                      costForTwoMessage,
-                      aggregatedDiscountInfoV3 = {},
-                      name,
-                      avgRating,
-                      sla: { slaString },
-                    },
-                  },
-                },
-              }) => 
-                <h1>{name}</h1>
-            )}
+          ? dishes.map((data) => <Dishes data={data} />)
+          : restaurantData.map((data) => <SearchRestaurant data={data} />)}
       </div>
     </div>
   );
